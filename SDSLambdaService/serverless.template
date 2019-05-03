@@ -1,0 +1,135 @@
+{
+	"AWSTemplateFormatVersion" : "2010-09-09",
+	"Transform" : "AWS::Serverless-2016-10-31",
+	"Description" : "An AWS Serverless Application.",
+
+    "Globals" : {
+		"Function" : {
+			"Environment" : {
+				"Variables" : {
+					"ASPNETCORE_ENVIRONMENT": "Production",
+					"SDSConnectionString":  "Data Source=thnssol.canhcnea18fi.ap-southeast-1.rds.amazonaws.com;Initial Catalog=SDS;User ID=nsadmin;Password=8ercSxXE9ULyfBg"
+				}
+			}
+		}
+	},
+	"Resources" : {
+	
+		"IssueAdd" : {
+		"Type" : "AWS::Serverless::Function",
+			"Properties": {
+				"Handler": "SDSLambdaService::SDSLambdaService.IssueFunction::AddIssue",
+				"Runtime": "dotnetcore2.1",
+				"CodeUri": "",
+				"MemorySize": 256,
+				"Timeout": 30,
+				"Role": null,
+				"Policies": [ "AWSLambdaBasicExecutionRole" ],
+				"Events": {
+					"PutResource": {
+						"Type": "Api",
+						"Properties": {
+							"Path": "/issues",
+							"Method": "PUT"
+						}
+					}
+				}
+			}
+		},
+	
+		"IssueGet" : {
+		"Type" : "AWS::Serverless::Function",
+			"Properties": {
+				"Handler": "SDSLambdaService::SDSLambdaService.IssueFunction::GetIssue",
+				"Runtime": "dotnetcore2.1",
+				"CodeUri": "",
+				"MemorySize": 256,
+				"Timeout": 30,
+				"Role": null,
+				"Policies": [ "AWSLambdaBasicExecutionRole" ],
+				"Events": {
+					"PutResource": {
+						"Type": "Api",
+						"Properties": {
+							"Path": "/issues/{IssueId}",
+							"Method": "GET"
+						}
+					}
+				}
+			}
+		},
+	
+		"IssueGets" : {
+		"Type" : "AWS::Serverless::Function",
+			"Properties": {
+				"Handler": "SDSLambdaService::SDSLambdaService.IssueFunction::GetIssues",
+				"Runtime": "dotnetcore2.1",
+				"CodeUri": "",
+				"MemorySize": 256,
+				"Timeout": 30,
+				"Role": null,
+				"Policies": [ "AWSLambdaBasicExecutionRole" ],
+				"Events": {
+					"PutResource": {
+						"Type": "Api",
+						"Properties": {
+							"Path": "/issues",
+							"Method": "GET"
+						}
+					}
+				}
+			}
+		},
+
+		"GetTest" : {
+		"Type" : "AWS::Serverless::Function",
+			"Properties": {
+				"Handler": "SDSLambdaService::SDSLambdaService.BaseFunction::Get",
+				"Runtime": "dotnetcore2.1",
+				"CodeUri": "",
+				"MemorySize": 256,
+				"Timeout": 30,
+				"Role": null,
+				"Policies": [ "AWSLambdaBasicExecutionRole" ],
+				"Events": {
+					"PutResource": {
+						"Type": "Api",
+						"Properties": {
+							"Path": "/get",
+							"Method": "GET"
+						}
+					}
+				}
+			}
+		},
+
+		"FunctionTest" : {
+		"Type" : "AWS::Serverless::Function",
+			"Properties": {
+				"Handler": "SDSLambdaService::SDSLambdaService.BaseFunction::FunctionHandler",
+				"Runtime": "dotnetcore2.1",
+				"CodeUri": "",
+				"MemorySize": 256,
+				"Timeout": 30,
+				"Role": null,
+				"Policies": [ "AWSLambdaBasicExecutionRole" ],
+				"Events": {
+					"PutResource": {
+						"Type": "Api",
+						"Properties": {
+							"Path": "/",
+							"Method": "GET"
+						}
+					}
+				}
+			}
+		}
+	},
+
+	"Outputs" : {
+		"ApiURL" : {
+			"Description" : "API endpoint URL for Prod environment",
+			"Value" : { "Fn::Sub" : "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/" }
+		}
+	}
+}
